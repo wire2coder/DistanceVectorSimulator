@@ -1,31 +1,30 @@
 import java.util.*;
 
-class EventListImpl implements EventList
+class EventListerImplement implements EventLister 
 {
     private Vector vector1;
     
-    public EventListImpl()
-    {
+    public EventListerImplement() {
         vector1 = new Vector();
     }
     
-    public boolean add(Event e)
-    {
+    public boolean add(Event e) {
         vector1.addElement(e);
         return true;
     }
     
-    public Event removeNext()
-    {
-        if (vector1.isEmpty())
-        {
+    public Event removeNext() {
+
+        if ( vector1.isEmpty() ) {
             return null;
         }
     
         int firstIndex = 0;
+
         double first = ((Event)vector1.elementAt(firstIndex)).getTime();
-        for (int i = 0; i < vector1.size(); i++)
-        {
+
+        for (int i = 0; i < vector1.size(); i++) {
+
             if (((Event)vector1.elementAt(i)).getTime() < first)
             {
                 first = ((Event)vector1.elementAt(i)).getTime();
@@ -39,16 +38,16 @@ class EventListImpl implements EventList
         return next;
     }
     
-    public String toString()
-    {
+    public String toString() {
         return vector1.toString();
     }
     
-    public double getLastPacketTime(int entityFrom, int entityTo)
-    {
+    public double getLastPacketTime(int entityFrom, int entityTo) {
+
         double time = 0.0;
-        for (int i = 0; i < vector1.size(); i++)
-        {
+
+        for (int i = 0; i < vector1.size(); i++) {
+
             if ((((Event)(vector1.elementAt(i))).getType() == 
                                            NetworkSimulator.FROMLAYER2) &&
                 (((Event)(vector1.elementAt(i))).getEntity() == entityTo) &&
@@ -62,4 +61,5 @@ class EventListImpl implements EventList
     
         return time;
     }
-}
+
+} // class EventListerImplement

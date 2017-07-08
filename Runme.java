@@ -1,11 +1,9 @@
-
-
 import java.io.*;
 
-class Project
-{
-    public final static void main(String[] argv)
-    {
+class Runme {
+
+    public final static void main(String[] argv) {
+
         NetworkSimulator simulator;
         
         int trace = -1;
@@ -17,18 +15,18 @@ class Project
         BufferedReader stdIn = new BufferedReader(
                                    new InputStreamReader(System.in));
                                    
-        System.out.println("Network Simulator v1.0");
+        System.out.println("Distance Vector Algorithm, Homework 6");
         
         while (trace < 0)
         {
-            System.out.print("Enter trace level (>= 0): [0] ");
+            System.out.print("Enter trace level (>= 0): ");
             try
             {
                 buffer = stdIn.readLine();
             }
             catch (IOException ioe)
             {
-                System.out.println("IOError reading your input!");
+                System.out.println("reading input error!");
                 System.exit(1);
             }
             
@@ -41,6 +39,7 @@ class Project
                 try
                 {
                     trace = Integer.parseInt(buffer);
+                    // trace = 2
                 }
                 catch (NumberFormatException nfe)
                 {
@@ -51,14 +50,14 @@ class Project
 
         while ((hasLinkChange < 0) || (hasLinkChange > 1))
         {
-            System.out.print("Will the link change (1 = Yes, 0 = No): [0] ");
+            System.out.print("Is the distance between Router changes? (1 = Yes, 0 = No): " );
             try
             {
                 buffer = stdIn.readLine();
             }
             catch (IOException ioe)
             {
-                System.out.println("IOError reading your input!");
+                System.out.println("reading input error!");
                 System.exit(1);
             }
             
@@ -81,14 +80,14 @@ class Project
 
         while (seed < 1)
         {
-            System.out.print("Enter random seed: [random] ");
+            System.out.print("Random Number Generator, Enter any number from 1-9: ");
             try
             {
                 buffer = stdIn.readLine();
             }
             catch (IOException ioe)
             {
-                System.out.println("IOError reading your input!");
+                System.out.println("reading input error!");
                 System.exit(1);
             }
             

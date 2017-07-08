@@ -3,7 +3,7 @@ import java.util.*;
 class NetworkSimulator
 {    
     // This is the number of entities in the simulator
-    public static final int NUMENTITIES = 4;
+    public static final int numberofRouters = 4;
 
     // These constants are possible events
     public static final int FROMLAYER2 = 0;
@@ -12,7 +12,7 @@ class NetworkSimulator
     // Parameters of the simulation
     private boolean linkChanges;
     private static int traceLevel;
-    private static EventList eventList;
+    private static EventLister eventList;
     private static Random rand;
     
     // Data used for the simulation
@@ -21,15 +21,15 @@ class NetworkSimulator
     private static double time;
 
     // Initializes the simulator
-    public NetworkSimulator(boolean hasLinkChange, int trace, long seed)
+    public NetworkSimulator(boolean linkChanges1, int trace, long seed)
     {
-        linkChanges = hasLinkChange;
+        linkChanges = linkChanges1;
         traceLevel = trace;
-        eventList = new EventListImpl();
+        eventList = new EventListerImplement();
         rand = new Random(seed);
         time = 0.0;
         
-        cost = new int[NUMENTITIES][NUMENTITIES];
+        cost = new int[numberofRouters][numberofRouters];
         cost[0][0] = 0;
         cost[0][1] = 1;
         cost[0][2] = 3;
@@ -47,7 +47,7 @@ class NetworkSimulator
         cost[3][2] = 2;
         cost[3][3] = 0;
 
-        entity = new Entity[NUMENTITIES];
+        entity = new Entity[numberofRouters];
         entity[0] = new Entity0();
         entity[1] = new Entity1();
         entity[2] = new Entity2();
@@ -88,11 +88,11 @@ class NetworkSimulator
                     System.out.print("  src=" + p.getSource() + ", ");
                     System.out.print("dest=" + p.getDest() + ", ");
                     System.out.print("contents=[");
-                    for (int i = 0; i < NUMENTITIES - 1; i++)
+                    for (int i = 0; i < numberofRouters - 1; i++)
                     {
                         System.out.print(p.getMincost(i) + ", ");
                     }
-                    System.out.println(p.getMincost(NUMENTITIES - 1) + "]");
+                    System.out.println(p.getMincost(numberofRouters - 1) + "]");
                 }
                 else if (next.getType() == LINKCHANGE)
                 {
@@ -105,7 +105,7 @@ class NetworkSimulator
             if (next.getType() == FROMLAYER2)
             {
                 p = next.getPacket();
-                if ((next.getEntity() < 0) || (next.getEntity() >= NUMENTITIES))
+                if ((next.getEntity() < 0) || (next.getEntity() >= numberofRouters))
                 {
                     System.out.println("main(): Panic. Unknown event entity.");
                 }
@@ -147,13 +147,13 @@ class NetworkSimulator
         Packet currentPacket;
         double arrivalTime;
     
-        if ((p.getSource() < 0) || (p.getSource() >= NUMENTITIES))
+        if ((p.getSource() < 0) || (p.getSource() >= numberofRouters))
         {
             System.out.println("toLayer2(): WARNING: Illegal source id in " +
                                "packet; ignoring.");
             return;
         }
-        if ((p.getDest() < 0) || (p.getDest() >= NUMENTITIES))
+        if ((p.getDest() < 0) || (p.getDest() >= numberofRouters))
         {
             System.out.println("toLayer2(): WARNING: Illegal destination id " +
                                "in packet; ignoring.");
@@ -178,7 +178,7 @@ class NetworkSimulator
             System.out.println("toLayer2(): source=" + p.getSource() + 
                                " dest=" + p.getDest());
             System.out.print("             costs:");
-            for (int i = 0; i < NUMENTITIES; i++)
+            for (int i = 0; i < numberofRouters; i++)
             {
                 System.out.print(" " + p.getMincost(i));
             }

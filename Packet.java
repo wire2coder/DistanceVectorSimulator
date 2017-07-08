@@ -4,14 +4,14 @@ class Packet
     private int dest;
     private int[] mincost;
     
-    public Packet(Packet p)
+    public Packet(Packet packet1)
     {
-        source = p.getSource();
-        dest = p.getDest();
-        mincost = new int[NetworkSimulator.NUMENTITIES];
-        for (int i = 0; i < NetworkSimulator.NUMENTITIES; i++)
+        source = packet1.getSource();
+        dest = packet1.getDest();
+        mincost = new int[NetworkSimulator.numberofRouters];
+        for (int i = 0; i < NetworkSimulator.numberofRouters; i++)
         {
-            mincost[i] = p.getMincost(i);
+            mincost[i] = packet1.getMincost(i);
         }
     }
     
@@ -20,14 +20,14 @@ class Packet
         source = s;
         dest = d;
         
-        mincost = new int[NetworkSimulator.NUMENTITIES];
-        if (mc.length != NetworkSimulator.NUMENTITIES)
+        mincost = new int[NetworkSimulator.numberofRouters];
+        if (mc.length != NetworkSimulator.numberofRouters)
         {
             System.out.println("Packet(): Invalid data format.");
             System.exit(1);
         }
         
-        for (int i = 0; i < NetworkSimulator.NUMENTITIES; i++)
+        for (int i = 0; i < NetworkSimulator.numberofRouters; i++)
         {
             mincost[i] = mc[i];
         }
@@ -53,7 +53,7 @@ class Packet
         String str;
         str = "source: " + source + "  dest: " + dest + "  mincosts: ";
         
-        for (int i = 0; i < NetworkSimulator.NUMENTITIES; i++)
+        for (int i = 0; i < NetworkSimulator.numberofRouters; i++)
         {
             str = str + i + "=" + getMincost(i) + " ";
         }
