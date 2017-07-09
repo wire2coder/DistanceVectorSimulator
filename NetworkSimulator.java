@@ -1,26 +1,23 @@
+
+
 import java.util.*;
 
 class NetworkSimulator
 {    
-    // This is the number of entities in the simulator
-    public static final int numberofRouters = 4;
 
-    // These constants are possible events
-    public static final int FROMLAYER2 = 0;
-    public static final int LINKCHANGE = 1;    
-    
-    // Parameters of the simulation
     private boolean linkChanges;
     private static int traceLevel;
     private static EventLister eventList;
     private static Random rand;
+
+    public static final int numberofRouters = 4;
+    public static final int FROMLAYER2 = 0;
+    public static final int LINKCHANGE = 1;    
     
-    // Data used for the simulation
     private Entity[] entity;
     public static int[][] cost;
     private static double time;
 
-    // Initializes the simulator
     public NetworkSimulator(boolean linkChanges1, int trace, long seed)
     {
         linkChanges = linkChanges1;
@@ -60,15 +57,13 @@ class NetworkSimulator
 
     }
     
-    // Starts the simulation. It will end when no more packets are in the
-    // medium
-    public void runSimulator()
-    {
+    public void runSimulator() {
+
         Event next;
         Packet p;
         
-        while(true)
-        {
+        while(true) {
+
             next = eventList.removeNext();
             
             if (next == null)
@@ -79,15 +74,16 @@ class NetworkSimulator
             if (traceLevel > 1)
             {
                 System.out.println();
-                System.out.println("main(): event received.  t=" +
+                System.out.println("runSimulator() event received.  t=" +
                                    next.getTime() +", node=" + 
                                    next.getEntity());
-                if (next.getType() == FROMLAYER2)
-                {
+
+                if (next.getType() == FROMLAYER2) {
+
                     p = next.getPacket();
-                    System.out.print("  src=" + p.getSource() + ", ");
-                    System.out.print("dest=" + p.getDest() + ", ");
-                    System.out.print("contents=[");
+                    System.out.print("source: " + p.getSource() + ", ");
+                    System.out.print("destination: " + p.getDest() + ", ");
+                    System.out.print("contents: ");
                     for (int i = 0; i < numberofRouters - 1; i++)
                     {
                         System.out.print(p.getMincost(i) + ", ");
@@ -96,43 +92,38 @@ class NetworkSimulator
                 }
                 else if (next.getType() == LINKCHANGE)
                 {
-                    System.out.println("  Link cost change.");
+                    System.out.println("Link cost change.");
                 }
             }
             
             time = next.getTime();
             
-            if (next.getType() == FROMLAYER2)
-            {
+            if (next.getType() == FROMLAYER2) {
                 p = next.getPacket();
-                if ((next.getEntity() < 0) || (next.getEntity() >= numberofRouters))
-                {
-                    System.out.println("main(): Panic. Unknown event entity.");
-                }
-                else
-                {
+
+                if ((next.getEntity() < 0) || (next.getEntity() >= numberofRouters)) {
+                    System.out.println("runSimulator() unknown packet");
+                } else {
                     entity[next.getEntity()].update(p);
                 }
-            }
-            else if (next.getType() == LINKCHANGE)
-            {
-                if (time < 10001.0)
-                {
+
+            } else if (next.getType() == LINKCHANGE) {
+
+                if (time < 10001.0) {
+
                     cost[0][1] = 20;
                     cost[1][0] = 20;
                     entity[0].linkCostChangeHandler(1, 20);
                     entity[1].linkCostChangeHandler(0, 20);
-                }
-                else
-                {
+
+                } else {
+
                     cost[0][1] = 1;
                     cost[1][0] = 1;
                     entity[0].linkCostChangeHandler(1, 1);
                     entity[1].linkCostChangeHandler(0, 1);
                 }
-            }
-            else
-            {
+            } else {
                 System.out.println("main(): Panic.  Unknown event type.");
             }    
         }
@@ -141,62 +132,38 @@ class NetworkSimulator
                            ", no packets in medium.");        
     }
     
-    // Sends a packet into the medium
+    // Sends a packet into the Network
     public static void toLayer2(Packet p)
     {
         Packet currentPacket;
         double arrivalTime;
     
-        if ((p.getSource() < 0) || (p.getSource() >= numberofRouters))
-        {
-            System.out.println("toLayer2(): WARNING: Illegal source id in " +
-                               "packet; ignoring.");
+        if ((p.getSource() < 0) || (p.getSource() >= numberofRouters)) {
+            System.out.println("toLayer2() incorrect source id in " +
+                               "packet");
             return;
-        }
-        if ((p.getDest() < 0) || (p.getDest() >= numberofRouters))
-        {
-            System.out.println("toLayer2(): WARNING: Illegal destination id " +
-                               "in packet; ignoring.");
-            return;
-        }
-        if (p.getSource() == p.getDest())
-        {
-            System.out.println("toLayer2(): WARNING: Identical source and " +
-                               "destination in packet; ignoring.");
-            return;
-        }
-        if (cost[p.getSource()][p.getDest()] == 999)
-        {
-            System.out.println("toLayer2(): WARNING: Source and destination " +
-                               "not connected; ignoring.");
-            return;
-        }
-        
-        
-        if (traceLevel > 2)
-        {
-            System.out.println("toLayer2(): source=" + p.getSource() + 
-                               " dest=" + p.getDest());
-            System.out.print("             costs:");
-            for (int i = 0; i < numberofRouters; i++)
-            {
-                System.out.print(" " + p.getMincost(i));
-            }
-            System.out.println();
-        }
-        
-        arrivalTime = eventList.getLastPacketTime(p.getSource(), p.getDest());
-        if (arrivalTime == 0.0)
-        {
-            arrivalTime = time;
-        }
-        arrivalTime = arrivalTime + 1.0 + (rand.nextDouble() * 9.0);
-        
-        if (traceLevel > 2)
-        {
-            System.out.println("toLayer2(): Scheduling arrival of packet.");
         }
 
+        if ((p.getDest() < 0) || (p.getDest() >= numberofRouters)) {
+            System.out.println("toLayer2() incorrect destination id " +
+                               "in packet");
+            return;
+        }
+
+        if (p.getSource() == p.getDest()) {
+            System.out.println("toLayer2() same source and " +
+                               "destination in packet");
+            return;
+        }
+
+        if (cost[p.getSource()][p.getDest()] == 999) {
+            System.out.println("toLayer2() same Source and destination " +
+                               "not connected");
+            return;
+        }
+    
+        arrivalTime = eventList.getLastPacketTime(p.getSource(), p.getDest());
+        
         currentPacket = new Packet(p);
         eventList.add(new Event(arrivalTime, FROMLAYER2, 
                                 currentPacket.getDest(), currentPacket));
